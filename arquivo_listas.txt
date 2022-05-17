@@ -1,4 +1,6 @@
-Terminar de testar auto compara;2022-03-04
-lavar louça;2022-09-10
-fazer gt;2022-05-17
-ashausahus;2003-03-12
+aaaa;2022-03-04
+bbbb;2022-03-04
+c;2022-03-04
+debuggar o algoritmo;2000-03-03
+lavar louça;2022-05-17
+tanto faz;1878-03-03

@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Programa_listaDeTarefas/listaDeTarefas"
+    ]
+}

@@ -1,6 +1,7 @@
 from funções import linhaCheia, limpaTela
 from controler import Controler
 control = Controler()
+
 def menu ():
         limpaTela()
         print('Menu:') 
