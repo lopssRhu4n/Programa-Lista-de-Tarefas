@@ -8,26 +8,7 @@ class model:
     def __init__(self):
         self.listaTarefa = []
         self.nomesEDatasDasTarefas =[]
-            
-    def criaTarefa(self):
-        tar = Tarefa()
-        nome = (input('Nome da tarefa: '))
-        data = input('Data final(YYYY-MM-DD): ')
-        tar.setNomeTar(nome)  
-        tar.setPrazo(data)
-        input('\nAperte qualquer tecla para voltar ao menu.')
-        self.listaTarefa.append(tar)
-        funcao.limpaTela()
-        
-    def excluiTarefas(self):
-        indice = int(input('Qual tarefa você deseja excluir? \n'))
-        funcao.linhaCheia()
-        print(f'Você excluiu a tarefa {self.listaTarefa[indice].getNomeTar()}')
-        del(self.listaTarefa[indice])
-        print('-'*50, '\n')    
-        input('\nAperte qualquer tecla para voltar ao menu.')   
-        funcao.limpaTela() 
- 
+
            
     def salvaDadosTar(self):
         with open('arquivo_listas.txt', 'w') as arquivo:           
@@ -48,6 +29,35 @@ class model:
                     tar.setPrazo(dataFdaTarefa)
                     self.listaTarefa.append(tar)
         
+    def transformaListaDeObjEmArray(self):  
+        for tar in self.listaTarefa:
+            nomeTar = tar.getNomeTar()
+            dataTar = tar.getPrazo()
+            self.nomesEDatasDasTarefas.append((nomeTar, dataTar))    
+            
+    def limpaArrayComDados(self):
+        self.nomesEDatasDasTarefas.clear()
+                
+    def criaTarefa(self):
+        tar = Tarefa()
+        nome = (input('Nome da tarefa: '))
+        data = input('Data final(YYYY-MM-DD): ')
+        tar.setNomeTar(nome)  
+        tar.setPrazo(data)
+        input('\nAperte qualquer tecla para voltar ao menu.')
+        self.listaTarefa.append(tar)
+        self.nomesEDatasDasTarefas.append((nome, data))
+        funcao.limpaTela()
+        
+    def excluiTarefas(self):
+        indice = int(input('Qual tarefa você deseja excluir? \n'))
+        funcao.linhaCheia()
+        print(f'Você excluiu a tarefa {self.listaTarefa[indice].getNomeTar()}')
+        del(self.listaTarefa[indice])
+        print('-'*50, '\n')    
+        input('\nAperte qualquer tecla para voltar ao menu.')   
+        funcao.limpaTela() 
+    
     
     def mostraTodasAsTarefas(self):
         funcao.limpaTela()    
@@ -90,32 +100,13 @@ class model:
             dataAnterior = dataAtual    
         return self.tabelaTarefas()
     
-    def ordenaAlfabeticamente(self):
-        nomeAnterior = 'zzzzzzzzzzz'
-        for tar in self.listaTarefa:
-            nomeAtual = tar.getNomeTar()
-            if nomeAtual < nomeAnterior:
-                self.listaTarefa.remove(tar)
-                self.listaTarefa.insert(0, tar)
-                print(f"Nome anterior: {nomeAnterior}, nome atual: {nomeAtual}")
-            
-            if nomeAtual > nomeAnterior:
-                nomeAnterior = nomeAtual    
-                
-            print('Até aqui funciona')   
-        
-        input()     
+    def ordenaAlfabeticamente(self): 
               
         return self.tabelaTarefas()
        
     def tabelaTarefas(self):
-        d = []
-        funcao.limpaTela()
-        for cadaTarefa in self.listaTarefa:
-            nomeDaTarefa = cadaTarefa.getNomeTar()
-            prazoDaTarefa = cadaTarefa.getPrazo()
-            d.append((nomeDaTarefa,prazoDaTarefa))
-        print(tabulate(d, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
+        func.limpaTela()
+        print(tabulate(self.nomesEDatasDasTarefas, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
 
         
         return self.menuDaVisualizaçãoDeTarefas()

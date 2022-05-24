@@ -9,6 +9,7 @@ class Controler:
         self.view = view()
         self.model = model()
         self.model.lerTarefas()
+        self.model.transformaListaDeObjEmArray()
     def start(self):
         escolha = self.view.menu()
         
