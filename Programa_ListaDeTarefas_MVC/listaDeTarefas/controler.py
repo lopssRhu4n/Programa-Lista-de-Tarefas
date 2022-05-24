@@ -15,7 +15,7 @@ class Controler:
         if escolha == '1':
             self.model.criaTarefa()
         if escolha == '2':
-            self.model.mostraTodasAsTarefas()
+            self.model.tabelaTarefas()
         if escolha == '3':
             self.model.excluiTarefas()
         if escolha == '4':

@@ -1,6 +1,6 @@
 from datetime import date
-from operator import indexOf
 from classeTarefa import Tarefa
+from tabulate import tabulate
 import func
 
 funcao = func
@@ -61,7 +61,7 @@ class model:
         if escolha == '1':
             self.editaTarefas()
         if escolha == '2':
-            self.ordenaTarefaAlfabeticamente()
+            self.ordenaAlfabeticamente()
         if escolha == '3':
             self.ordenaTarefaPorData()    
         if escolha == '4':
@@ -87,36 +87,43 @@ class model:
             if dataAtual < dataAnterior:
                 self.listaTarefa.remove(tar)
                 self.listaTarefa.insert(0, tar)
-            dataAnterior = dataAtual
-        return self.mostraTodasAsTarefas()
-               
-    def ordenaTarefaAlfabeticamente(self):
-        nomeAnterior = 'zzzzzzzzzzzzzzzzzzzzz'
+            dataAnterior = dataAtual    
+        return self.tabelaTarefas()
+    
+    def ordenaAlfabeticamente(self):
+        nomeAnterior = 'zzzzzzzzzzz'
         for tar in self.listaTarefa:
             nomeAtual = tar.getNomeTar()
             if nomeAtual < nomeAnterior:
                 self.listaTarefa.remove(tar)
                 self.listaTarefa.insert(0, tar)
-                for i in self.listaTarefa:
-                    print(i.getNomeTar())    
-            nomeAnterior = nomeAtual
-        input()    
-        return self.mostraTodasAsTarefas()
+                print(f"Nome anterior: {nomeAnterior}, nome atual: {nomeAtual}")
             
+            if nomeAtual > nomeAnterior:
+                nomeAnterior = nomeAtual    
+                
+            print('Até aqui funciona')   
         
+        input()     
+              
+        return self.tabelaTarefas()
+       
+    def tabelaTarefas(self):
+        d = []
+        funcao.limpaTela()
+        for cadaTarefa in self.listaTarefa:
+            nomeDaTarefa = cadaTarefa.getNomeTar()
+            prazoDaTarefa = cadaTarefa.getPrazo()
+            d.append((nomeDaTarefa,prazoDaTarefa))
+        print(tabulate(d, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
+
         
-#Função para imprimir em formato de tabela        
-    # def tabelaTarefas(self):
-    #     funcao.limpaTela()
-    #     print(self.listaTarefa)
-    #     print('Array com as tarefas do programa ^')
-    #     for cadaTarefa in self.listaTarefa:
-    #         nomeDaTarefa = cadaTarefa.getNomeTar()
-    #         prazoDaTarefa = cadaTarefa.getDataF()
-    #         d = []
-    #         d.append((nomeDaTarefa,prazoDaTarefa))
+        return self.menuDaVisualizaçãoDeTarefas()
     
-    #     print(d, 'array criado na função')
-    #     #print(tabulate(d, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
-    #     input('Pressione qualquer tecla para voltar ao menu.')
+
+    
+   
+
+   
+    
     
