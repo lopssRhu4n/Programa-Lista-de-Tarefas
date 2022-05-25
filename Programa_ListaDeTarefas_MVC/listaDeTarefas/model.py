@@ -32,8 +32,8 @@ class model:
     def transformaListaDeObjEmArray(self):  
         for tar in self.listaTarefa:
             nomeTar = tar.getNomeTar()
-            dataTar = tar.getPrazo()
-            self.nomesEDatasDasTarefas.append((nomeTar, dataTar))    
+            dataTar = tar.getPrazoAsData()
+            self.nomesEDatasDasTarefas.append([nomeTar, dataTar])    
             
     def limpaArrayComDados(self):
         self.nomesEDatasDasTarefas.clear()
@@ -46,7 +46,8 @@ class model:
         tar.setPrazo(data)
         input('\nAperte qualquer tecla para voltar ao menu.')
         self.listaTarefa.append(tar)
-        self.nomesEDatasDasTarefas.append((nome, data))
+        data = tar.getPrazoAsData()
+        self.nomesEDatasDasTarefas.append([nome, data])
         funcao.limpaTela()
         
     def excluiTarefas(self):
@@ -71,7 +72,7 @@ class model:
         if escolha == '1':
             self.editaTarefas()
         if escolha == '2':
-            self.ordenaAlfabeticamente()
+            self.ordenaNomeDasTarefas()
         if escolha == '3':
             self.ordenaTarefaPorData()    
         if escolha == '4':
@@ -90,20 +91,34 @@ class model:
             novaData = input('Digite a nova data final(YYYY-MM-DD)\n')
             tarefaEscolhida.setPrazo(novaData)
 
+    def ordenaNomeDasTarefas(self):
+        print(self.nomesEDatasDasTarefas)
+        alist = self.nomesEDatasDasTarefas
+        print(alist)
+        for numero in range(len(alist)-1, 0, -1):      
+                 for linha in range(numero):
+                    nomeAtual = alist[linha][0].lower()
+                    proximoNome = alist[linha+1][0].lower()   
+                    if nomeAtual > proximoNome:
+                          alist[linha], alist[linha+1] = alist[linha+1], alist[linha]
+        self.nomesEDatasDasTarefas = alist       
+        input()           
+        return self.tabelaTarefas()                
+        
+
     def ordenaTarefaPorData(self):
-        dataAnterior = date.max
-        for tar in self.listaTarefa:
-            dataAtual = tar.getPrazoAsData()
-            if dataAtual < dataAnterior:
-                self.listaTarefa.remove(tar)
-                self.listaTarefa.insert(0, tar)
-            dataAnterior = dataAtual    
-        return self.tabelaTarefas()
-    
-    def ordenaAlfabeticamente(self): 
-              
-        return self.tabelaTarefas()
-       
+        print(self.nomesEDatasDasTarefas)
+        alist = self.nomesEDatasDasTarefas
+        print(alist)
+        for numero in range(len(alist)-1, 0, -1):      
+                 for linha in range(numero): 
+                    if alist[linha][1] > alist[linha+1][1]:
+                          alist[linha], alist[linha+1] = alist[linha+1], alist[linha]
+        self.nomesEDatasDasTarefas = alist       
+        input()           
+        return self.tabelaTarefas()                
+        
+           
     def tabelaTarefas(self):
         func.limpaTela()
         print(tabulate(self.nomesEDatasDasTarefas, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
