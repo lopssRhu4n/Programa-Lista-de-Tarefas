@@ -90,6 +90,7 @@ class model:
             novaData = input('Digite a nova data final(YYYY-MM-DD)\n')
             tarefaEscolhida.setPrazo(novaData)
 
+<<<<<<< Updated upstream
     def ordenaTarefaPorData(self):
         dataAnterior = date.max
         for tar in self.listaTarefa:
@@ -104,6 +105,32 @@ class model:
               
         return self.tabelaTarefas()
        
+=======
+    def ordenaNomeDasTarefas(self):
+        alist = self.nomesEDatasDasTarefas
+        print(alist)
+        for numero in range(len(alist)-1, 0, -1):      
+                 for linha in range(numero):
+                    nomeAtual = alist[linha][0].lower()
+                    proximoNome = alist[linha+1][0].lower()   
+                    if nomeAtual > proximoNome:
+                          alist[linha], alist[linha+1] = alist[linha+1], alist[linha]
+        self.nomesEDatasDasTarefas = alist                  
+        return self.tabelaTarefas()                
+        
+
+    def ordenaTarefaPorData(self):
+        alist = self.nomesEDatasDasTarefas
+        print(alist)
+        for numero in range(len(alist)-1, 0, -1):      
+                 for linha in range(numero): 
+                    if alist[linha][1] > alist[linha+1][1]:
+                          alist[linha], alist[linha+1] = alist[linha+1], alist[linha]
+        self.nomesEDatasDasTarefas = alist       
+        return self.tabelaTarefas()                
+        
+           
+>>>>>>> Stashed changes
     def tabelaTarefas(self):
         func.limpaTela()
         print(tabulate(self.nomesEDatasDasTarefas, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
