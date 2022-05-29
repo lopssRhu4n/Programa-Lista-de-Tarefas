@@ -27,7 +27,7 @@ class Controler:
         self.model.salvaDadosTar()
         print('Obrigado por usar nosso programa!')
         
-    
+            
 a = Controler();
 a.start()    
         

@@ -32,21 +32,27 @@ class model:
     def transformaListaDeObjEmArray(self):  
         for tar in self.listaTarefa:
             nomeTar = tar.getNomeTar()
-            dataTar = tar.getPrazo()
-            self.nomesEDatasDasTarefas.append((nomeTar, dataTar))    
+            dataTar = tar.getPrazoAsData()
+            self.nomesEDatasDasTarefas.append([nomeTar, dataTar])    
             
     def limpaArrayComDados(self):
         self.nomesEDatasDasTarefas.clear()
                 
     def criaTarefa(self):
         tar = Tarefa()
-        nome = (input('Nome da tarefa: '))
-        data = input('Data final(YYYY-MM-DD): ')
-        tar.setNomeTar(nome)  
-        tar.setPrazo(data)
+        try:
+            nome = (input('Nome da tarefa: '))
+            data = input('Data final(YYYY-MM-DD): ')
+            tar.setNomeTar(nome)  
+            tar.setPrazo(data)
+        except ValueError:
+            print('Você inseriu dados incorretamente')
+            input('Tente novamente')
+            return self.criaTarefa()    
         input('\nAperte qualquer tecla para voltar ao menu.')
         self.listaTarefa.append(tar)
-        self.nomesEDatasDasTarefas.append((nome, data))
+        data = tar.getPrazoAsData()
+        self.nomesEDatasDasTarefas.append([nome, data])
         funcao.limpaTela()
         
     def excluiTarefas(self):
@@ -71,14 +77,14 @@ class model:
         if escolha == '1':
             self.editaTarefas()
         if escolha == '2':
-            self.ordenaAlfabeticamente()
+            self.ordenaNomeDasTarefas()
         if escolha == '3':
             self.ordenaTarefaPorData()    
         if escolha == '4':
             return 
         
     def editaTarefas(self):
-    
+        try:
             selecionaTarefa = int(input('Digite o índice da tarefa.\n'))
             tarefaEscolhida = self.listaTarefa[selecionaTarefa]
             funcao.linhaCheia()
@@ -89,23 +95,16 @@ class model:
             tarefaEscolhida.setNomeTar(novoNome) 
             novaData = input('Digite a nova data final(YYYY-MM-DD)\n')
             tarefaEscolhida.setPrazo(novaData)
+        except ValueError:
+            print('Você inseriu dados incorretos.')
+            input('Tente novamente')
+            return self.editaTarefas()
+        except IndexError:
+            print('Você digitou um índice inexistente.')
+            input('Tente novamente.')
+            return self.editaTarefas()
+            
 
-<<<<<<< Updated upstream
-    def ordenaTarefaPorData(self):
-        dataAnterior = date.max
-        for tar in self.listaTarefa:
-            dataAtual = tar.getPrazoAsData()
-            if dataAtual < dataAnterior:
-                self.listaTarefa.remove(tar)
-                self.listaTarefa.insert(0, tar)
-            dataAnterior = dataAtual    
-        return self.tabelaTarefas()
-    
-    def ordenaAlfabeticamente(self): 
-              
-        return self.tabelaTarefas()
-       
-=======
     def ordenaNomeDasTarefas(self):
         alist = self.nomesEDatasDasTarefas
         print(alist)
@@ -119,7 +118,7 @@ class model:
         return self.tabelaTarefas()                
         
 
-    def ordenaTarefaPorData(self):
+    def ordenaTarefaPorData(self):  
         alist = self.nomesEDatasDasTarefas
         print(alist)
         for numero in range(len(alist)-1, 0, -1):      
@@ -130,10 +129,9 @@ class model:
         return self.tabelaTarefas()                
         
            
->>>>>>> Stashed changes
     def tabelaTarefas(self):
         func.limpaTela()
-        print(tabulate(self.nomesEDatasDasTarefas, headers=("Nome:","Prazo:"), tablefmt="fancy_grid"))
+        print(tabulate(self.nomesEDatasDasTarefas, headers=("Índice:","Nome:","Prazo:"), tablefmt="fancy_grid", showindex="always"))
 
         
         return self.menuDaVisualizaçãoDeTarefas()
