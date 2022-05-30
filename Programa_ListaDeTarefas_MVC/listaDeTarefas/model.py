@@ -1,4 +1,5 @@
 from datetime import date
+from re import A
 from classeTarefa import Tarefa
 from tabulate import tabulate
 import func
@@ -14,8 +15,9 @@ class model:
         with open('arquivo_listas.txt', 'w') as arquivo:           
             for tar in self.listaTarefa:    
                 arquivo.write(tar.getNomeTar() + ';')
-                arquivo.write(tar.getPrazo() + '\n')
-    
+                arquivo.write(tar.getPrazo() + ';')
+                arquivo.write(tar.getStatus() + '\n')
+                
     def lerTarefas(self):   
         with open('arquivo_listas.txt', 'r') as arquivo:
             dadosDasTarefas = arquivo.readlines()
@@ -24,16 +26,19 @@ class model:
                     tar = Tarefa()
                     linha = linha.split(';')
                     nomeDaTarefa = linha[0]
-                    dataFdaTarefa = linha[1].replace('\n','')
+                    dataFdaTarefa = linha[1]
+                    statusDaTarefa = linha[2].replace('\n', '')
                     tar.setNomeTar(nomeDaTarefa)
                     tar.setPrazo(dataFdaTarefa)
+                    tar.setStatus(statusDaTarefa)
                     self.listaTarefa.append(tar)
         
     def transformaListaDeObjEmArray(self):  
         for tar in self.listaTarefa:
             nomeTar = tar.getNomeTar()
             dataTar = tar.getPrazoAsData()
-            self.nomesEDatasDasTarefas.append([nomeTar, dataTar])    
+            status = tar.getStatus()
+            self.nomesEDatasDasTarefas.append([nomeTar, dataTar, status])    
             
     def limpaArrayComDados(self):
         self.nomesEDatasDasTarefas.clear()
@@ -41,7 +46,7 @@ class model:
     def criaTarefa(self):
         tar = Tarefa()
         try:
-            nome = (input('Nome da tarefa: '))
+            nome = input('Nome da tarefa: ')
             data = input('Data final(YYYY-MM-DD): ')
             tar.setNomeTar(nome)  
             tar.setPrazo(data)
@@ -54,38 +59,49 @@ class model:
         data = tar.getPrazoAsData()
         self.nomesEDatasDasTarefas.append([nome, data])
         funcao.limpaTela()
+
+    def getIndexTarefa(self):
+        indice = int(input('Digite o índice da tarefa.'))
+        return indice
         
     def excluiTarefas(self):
-        indice = int(input('Qual tarefa você deseja excluir? \n'))
-        funcao.linhaCheia()
-        print(f'Você excluiu a tarefa {self.listaTarefa[indice].getNomeTar()}')
-        del(self.listaTarefa[indice])
-        print('-'*50, '\n')    
-        input('\nAperte qualquer tecla para voltar ao menu.')   
-        funcao.limpaTela() 
-    
-    
-    def mostraTodasAsTarefas(self):
-        funcao.limpaTela()    
-        print(f'{"Índice:":<0}{"Nome:":>27}')
-        for tar in self.listaTarefa:
-            print(f'{self.listaTarefa.index(tar)}  {"-"*25} {tar.getNomeTar()}')
-        return self.menuDaVisualizaçãoDeTarefas() 
+        try:
+            indice = self.getIndexTarefa()
+            funcao.linhaCheia()
+            print(f'Você excluiu a tarefa {self.listaTarefa[indice].getNomeTar()}')
+            del(self.listaTarefa[indice])
+            print('-'*50, '\n')    
+            input('\nAperte qualquer tecla para voltar ao menu.')   
+            funcao.limpaTela() 
+        except IndexError:
+            input('Você digitou um índice que não existe. Tente novamente.')
+            return self.excluiTarefas() 
     
     def menuDaVisualizaçãoDeTarefas(self):
-        escolha = input('\n \n1 - editar tarefa\n2 - Ordernar alfabeticamente\n3 - Ordenar por data\n4 - voltar ao menu \n')
+        escolha = input('\n \n1 - editar tarefa\n2 - Concluir Tarefa\n3 - Ordernar alfabeticamente\n4 - Ordenar por data\n5 - voltar ao menu \n')
         if escolha == '1':
             self.editaTarefas()
         if escolha == '2':
-            self.ordenaNomeDasTarefas()
+            self.concluiTarefa() 
         if escolha == '3':
-            self.ordenaTarefaPorData()    
+            self.ordenaNomeDasTarefas()
         if escolha == '4':
+            self.ordenaTarefaPorData()    
+        if escolha == '5':
             return 
+        
+    def concluiTarefa(self):
+        indiceTarefa = self.getIndexTarefa()
+        input()
+        tarefa = self.listaTarefa[indiceTarefa]
+        tarefa.setStatus("True")
+        self.limpaArrayComDados()
+        self.transformaListaDeObjEmArray()
+        return self.tabelaTarefas()
         
     def editaTarefas(self):
         try:
-            selecionaTarefa = int(input('Digite o índice da tarefa.\n'))
+            selecionaTarefa = self.getIndexTarefa()
             tarefaEscolhida = self.listaTarefa[selecionaTarefa]
             funcao.linhaCheia()
             print(f'Nome: {tarefaEscolhida.getNomeTar()}')
@@ -131,9 +147,7 @@ class model:
            
     def tabelaTarefas(self):
         func.limpaTela()
-        print(tabulate(self.nomesEDatasDasTarefas, headers=("Índice:","Nome:","Prazo:"), tablefmt="fancy_grid", showindex="always"))
-
-        
+        print(tabulate(self.nomesEDatasDasTarefas, headers=("Índice:","Nome:","Prazo:", "Status:"), tablefmt="fancy_grid", showindex="always"))        
         return self.menuDaVisualizaçãoDeTarefas()
     
 

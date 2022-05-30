@@ -22,8 +22,8 @@ class Tarefa:
         data = date.fromisoformat(data)        
         self.prazo = data
         
-    def getConcluida(self):
+    def getStatus(self):
         return self.concluida    
     
-    def setConcluida(self, conclusao):
-        self.concluida = conclusao
+    def setStatus(self, status):
+        self.concluida = status
